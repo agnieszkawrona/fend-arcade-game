@@ -23,7 +23,9 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    
     this.x += this.speed * dt;
+    
     //reseting the position of enemy, so they keep going all the time
     this.x > 505 ? this.x = 0: this.x;
 };
@@ -34,56 +36,58 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+// Now write your own player class
+// This class requires an update(), render() and
+// a handleInput() method.
+
 var Player = function() {
     this.sprite = 'images/char-boy.png';
+    
     //players coordinates:
     this.x = 200;
     this.y = 415;
+    
     //step length, basen on engine.js, lin 137
     this.yStep = 83;
     this.xStep = 101;
 };
 
 Player.prototype.update = function(dt) {
-  var thePl = this;
-  allEnemies.forEach(function (el) {
-    var enemyX = Number(el.x.toFixed());
-    var enemyY = el.y;
-    if (thePl.y === enemyY && (thePl.x  >= enemyX -80 && thePl.x < enemyX + 80)) {
-      //if "eaten", goes back to
-      thePl.x = 200;
-      thePl.y = 415;
-    };
-  });
+    var player = this;
+    allEnemies.forEach(function (el) {
+        var enemyX = Number(el.x.toFixed());
+        var enemyY = el.y;
+        if (player.y === enemyY && (player.x  >= enemyX -80 && player.x < enemyX + 80)) {
+        //if "eaten", goes back to place
+            player.x = 200;
+            player.y = 415;
+        };
+    });
 };
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-Player.prototype.handleInput = function (keyPress) {
-
-    if (keyPress == 'left' && this.x > 0) {
+Player.prototype.handleInput = function (key) {
+    if (key == 'left' && this.x > 0) {
         this.x -= 102;
     };
-
-    if (keyPress == 'right' && this.x < 402) {
+    if (key == 'right' && this.x < 402) {
         this.x += 102;
     };
-
-    if (keyPress == 'up' && this.y > 0) {
+    if (key == 'up' && this.y > 0) {
         this.y -= 83;
     };
-
-    if (keyPress == 'down' && this.y < 405) {
+    if (key == 'down' && this.y < 405) {
         this.y += 83;
     };
 
     if (this.y <= 0) {
         setTimeout(() => {
-            this.x = 202;
-            this.y = 405;
-        }, 800);
+            this.x = 200;
+            this.y = 415;
+        }, 500);
         alert("Congrats");
     };
 };
@@ -93,7 +97,7 @@ Player.prototype.handleInput = function (keyPress) {
 // Place the player object in a variable called player
 
 var player = new Player();
-var allEnemies =[new Enemy(83),new Enemy(166),new Enemy(249)];
+var allEnemies = [new Enemy(83),new Enemy(166),new Enemy(249)];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
